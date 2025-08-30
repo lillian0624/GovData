@@ -1,8 +1,8 @@
-# GovData - Government Data Discovery Platform
+# GovConnect - Government Data Discovery Platform
 
 A modern, searchable interface that connects fragmented government datasets across different agencies, allowing users to ask natural questions and discover unexpected links between data sources.
 
-![GovData](https://img.shields.io/badge/GovData-Active-brightgreen)
+![GovConnect](https://img.shields.io/badge/GovConnect-Active-brightgreen)
 ![Next.js](https://img.shields.io/badge/Next.js-15.5.2-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
 ![Prisma](https://img.shields.io/badge/Prisma-6.15.0-green)
@@ -12,7 +12,8 @@ A modern, searchable interface that connects fragmented government datasets acro
 
 ### ✅ Core Functionality
 - **Natural Language Search**: Ask questions in plain English like "aged care workforce trends by region since 2015"
-- **Multi-Agency Integration**: Connects ABS, AIHW, and Department of Education datasets
+- **Multi-Agency Integration**: Connects 
+ABS, AIHW, and Department of Education datasets
 - **Smart Recommendations**: Discover datasets you didn't know existed
 - **Live Data Access**: Fetch real-time statistics from ABS API
 - **Modern UI**: Clean, responsive interface built with Next.js and Tailwind CSS
@@ -25,10 +26,12 @@ A modern, searchable interface that connects fragmented government datasets acro
 
 ### 🚀 Live ABS Data Integration
 - **Real-time ABS API**: Direct connection to Australian Bureau of Statistics data
+- **SDMX Query Builder**: Developer-friendly visual query builder with dimension selection
 - **Business Indicators**: Quarterly economic data including sales, profits, employment
 - **Historical Data**: Time series from 1984 to present with future projections
 - **Industry Breakdown**: Manufacturing, retail, services, and more
 - **Regional Analysis**: State and territory-level statistics
+- **API Documentation**: Built-in SDMX format documentation and examples
 
 ## 🏗️ Architecture
 
@@ -165,13 +168,31 @@ GET /api/recommendations?type=search&domains=health,labour&keywords=aged+care
 GET /api/abs?dataflow=ABS&dataset=QBIS
 ```
 
+#### SDMX Query Builder
+The ABS Data Viewer includes a developer-friendly SDMX query builder with:
+- **Visual Dimension Selection**: Choose states, age groups, sex, and other dimensions
+- **Time Period Filters**: Set start and end periods (e.g., 2011, 2020-Q1)
+- **Generated URL Preview**: See the exact SDMX query URL before execution
+- **Copy to Clipboard**: Easily copy generated URLs for external use
+- **Built-in Documentation**: SDMX format examples and dimension codes
+
+**SDMX Query Format:**
+```
+https://data.api.abs.gov.au/rest/data/DATAFLOW,DATASET,VERSION/DIMENSIONS?PARAMETERS
+```
+
+**Example Generated URL:**
+```
+https://data.api.abs.gov.au/rest/data/ABS_LABOUR_FORCE,M1,1.0.0/3.TT?startPeriod=2011&dimensionAtObservation=AllDimensions
+```
+
 ## 🎨 Components
 
 ### Core Components
 - **DataDiscoveryApp**: Main application container
 - **DatasetCard**: Individual dataset display with metadata
 - **SearchFilters**: Advanced filtering by domain and agency
-- **ABSDataViewer**: Live ABS data visualization modal
+- **ABSDataViewer**: Enhanced ABS data viewer with SDMX query builder
 
 ### Utility Components
 - **DatasetDetailModal**: Detailed dataset information popup

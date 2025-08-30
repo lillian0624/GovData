@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GovData - Government Data Discovery Platform",
+  title: "GovConnect - Government Data Discovery Platform",
   description: "Discover and connect government datasets across agencies with natural language search",
 };
 

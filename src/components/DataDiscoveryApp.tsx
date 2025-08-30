@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Search, Filter, BarChart3, Database, TrendingUp, Users, Home, GraduationCap, Zap } from 'lucide-react'
+import { Search, Filter, BarChart3, TrendingUp, Users, Home, GraduationCap, Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
 import DatasetCard from './DatasetCard'
 import SearchFilters from './SearchFilters'
@@ -130,13 +130,11 @@ export default function DataDiscoveryApp() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
-                <Database className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">GovData</h1>
-                <p className="text-sm text-gray-600">Unified Government Data Discovery Platform</p>
-              </div>
+              <img
+                src="/logo_GovConnect.png"
+                alt="GovConnect Logo"
+                className="object-contain"
+              />
             </div>
             <button
               onClick={() => setShowABSViewer(!showABSViewer)}
