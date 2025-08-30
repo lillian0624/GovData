@@ -8,6 +8,84 @@ A modern, searchable interface that connects fragmented government datasets acro
 ![Prisma](https://img.shields.io/badge/Prisma-6.15.0-green)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC)
 
+## 🚀 Quick Start
+
+Get GovConnect running on your local machine in just 5 minutes!
+
+### Prerequisites
+- **Node.js 18+** - [Download here](https://nodejs.org/)
+- **npm** or **yarn** package manager
+- **Git** for version control
+
+### Step 1: Clone and Install
+```bash
+# Clone the repository
+git clone https://github.com/lillian0624/GovData.git
+cd gov-data-discovery
+
+# Install dependencies
+npm install
+```
+
+### Step 2: Set Up Database
+```bash
+# Generate Prisma client
+npx prisma generate
+
+# Create and migrate database
+npx prisma db push
+
+# Populate with sample data
+npx prisma db seed
+```
+
+### Step 3: Start Development Server
+```bash
+# Start the application
+npm run dev
+```
+
+### Step 4: Open in Browser
+Visit **http://localhost:3001** (or http://localhost:3000 if 3001 is busy)
+
+### 🎯 What You'll See
+- **Interactive Search**: Type natural language questions
+- **Dataset Discovery**: Browse government datasets
+- **Live ABS Data**: Real-time Australian statistics
+- **Smart Recommendations**: Related dataset suggestions
+
+### 🔧 Optional: ABS API Key
+For enhanced ABS data access, create a `.env` file:
+```env
+ABS_API_KEY=your_abs_api_key_here
+```
+Get your key from: https://www.abs.gov.au/statistics/developers/api
+
+### 🐛 Troubleshooting
+
+**Port already in use?**
+```bash
+# Use a different port
+npm run dev -- -p 3002
+```
+
+**Database issues?**
+```bash
+# Reset database
+npx prisma db push --force-reset
+npx prisma db seed
+```
+
+**Permission errors?**
+```bash
+# Clear npm cache
+npm cache clean --force
+rm -rf node_modules package-lock.json
+npm install
+```
+
+---
+
 ## 🌟 Features
 
 ### ✅ Core Functionality
@@ -56,46 +134,9 @@ ABS, AIHW, and Department of Education datasets
 - SearchQuery (analytics and optimization)
 ```
 
-## 📋 Installation
+## 📋 Advanced Installation
 
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-
-### Quick Start
-
-1. **Clone and install dependencies**:
-```bash
-cd /Users/yangli/gov-data-discovery
-npm install
-```
-
-2. **Set up the database**:
-```bash
-# Generate Prisma client
-npx prisma generate
-
-# Push database schema
-npx prisma db push
-
-# Seed with sample data
-npx prisma db seed
-```
-
-3. **Configure environment (optional)**:
-```bash
-# Add to .env file for ABS API access
-ABS_API_KEY=your_abs_api_key_here
-```
-
-4. **Start the development server**:
-```bash
-npm run dev
-```
-
-5. **Open your browser**:
-   - Local: http://localhost:3000
-   - Or port 3001 if 3000 is in use
+For detailed setup instructions and production deployment, see the sections below. The Quick Start guide above covers the basic setup.
 
 ## 🔍 Usage
 
