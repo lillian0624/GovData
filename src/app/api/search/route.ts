@@ -31,7 +31,10 @@ export async function GET(request: NextRequest) {
   const domain = searchParams.get('domain')
   const agency = searchParams.get('agency')
 
+  console.log('Search request received:', { query, domain, agency })
+
   if (!query) {
+    console.log('Search failed: No query parameter')
     return NextResponse.json({ error: 'Query parameter is required' }, { status: 400 })
   }
 

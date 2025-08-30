@@ -13,7 +13,7 @@ A modern, searchable interface that connects fragmented government datasets acro
 Get GovConnect running on your local machine in just 5 minutes!
 
 ### Prerequisites
-- **Node.js 18+** - [Download here](https://nodejs.org/)
+hub.- **Node.js 18+** - [Download here](https://nodejs.org/)
 - **npm** or **yarn** package manager
 - **Git** for version control
 
