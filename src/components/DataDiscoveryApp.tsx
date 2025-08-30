@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Search, Filter, BarChart3, TrendingUp, Users, Home, GraduationCap, Zap } from 'lucide-react'
+import React, { useState } from 'react'
+import Image from 'next/image'
+import { Search, Filter, BarChart3, TrendingUp, Users, Home, GraduationCap, Zap, Database } from 'lucide-react'
 import { motion } from 'framer-motion'
 import DatasetCard from './DatasetCard'
 import SearchFilters from './SearchFilters'
@@ -24,8 +25,8 @@ interface Dataset {
   dataPortalUrl?: string
   apiEndpoint?: string
   tags: Array<{ name: string }>
-  relatedFrom: any[]
-  relatedTo: any[]
+  relatedFrom: Array<{ id: string }>
+  relatedTo: Array<{ id: string }>
   relevanceScore?: number
 }
 
@@ -45,7 +46,7 @@ export default function DataDiscoveryApp() {
   })
   const [selectedDataset, setSelectedDataset] = useState<Dataset | null>(null)
   const [showABSViewer, setShowABSViewer] = useState(false)
-  const [recommendations, setRecommendations] = useState<any[]>([])
+  const [recommendations, setRecommendations] = useState<Array<{ dataset: Dataset; score: number; reason: string; type: string }>>([])
   const [showRecommendations, setShowRecommendations] = useState(false)
   const [searchError, setSearchError] = useState<string | null>(null)
 
@@ -130,9 +131,11 @@ export default function DataDiscoveryApp() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <img
+              <Image
                 src="/logo_GovConnect.png"
                 alt="GovConnect Logo"
+                width={40}
+                height={40}
                 className="object-contain"
               />
             </div>
@@ -202,7 +205,7 @@ export default function DataDiscoveryApp() {
           >
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold text-gray-900">
-                Found {searchResults.total} datasets for "{searchResults.query}"
+                Found {searchResults.total} datasets for &quot;{searchResults.query}&quot;
               </h3>
               <div className="flex items-center space-x-2 text-sm text-gray-600">
                 <Filter className="w-4 h-4" />
@@ -238,20 +241,20 @@ export default function DataDiscoveryApp() {
               <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No datasets found</h3>
               <p className="text-gray-600 mb-4">
-                We couldn't find any datasets matching "{searchResults.query}". Try adjusting your search terms or filters.
+                We couldn&apos;t find any datasets matching &quot;{searchResults.query}&quot;. Try adjusting your search terms or filters.
               </p>
               <div className="flex flex-wrap gap-2 justify-center">
                 <button
                   onClick={() => handleSearch('aged care workforce')}
                   className="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-full hover:bg-blue-200 transition-colors"
                 >
-                  Try "aged care workforce"
+                  Try &quot;aged care workforce&quot;
                 </button>
                 <button
                   onClick={() => handleSearch('housing affordability')}
                   className="px-3 py-1 text-sm bg-green-100 text-green-800 rounded-full hover:bg-green-200 transition-colors"
                 >
-                  Try "housing affordability"
+                  Try &quot;housing affordability&quot;
                 </button>
               </div>
             </div>
@@ -414,7 +417,7 @@ function DatasetDetailModal({
 }: {
   dataset: Dataset
   onClose: () => void
-  getDomainIcon: (domain: string) => JSX.Element
+  getDomainIcon: (domain: string) => React.JSX.Element
   getAgencyColor: (code: string) => string
 }) {
   return (

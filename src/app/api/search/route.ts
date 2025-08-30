@@ -1,6 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
-import { processQuery, getRelatedTerms, generateSuggestions } from '@/lib/nlp'
+import { processQuery, getRelatedTerms, generateSuggestions, ProcessedQuery } from '@/lib/nlp'
+
+interface SearchWhereConditions {
+  OR?: Array<{
+    name?: { contains: string }
+    description?: { contains: string }
+    keywords?: { contains: string }
+    tags?: { some: { name: { contains: string } } }
+    domains?: { contains: string }
+  }>
+  domains?: { contains: string }
+  agency?: { code: string }
+}
+
+interface DatasetWithAgency {
+  id: string
+  name: string
+  description: string
+  keywords: string
+  tags: Array<{ name: string }>
+  agency: { name: string }
+  relatedFrom: Array<{ id: string }>
+  relatedTo: Array<{ id: string }>
+}
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
@@ -15,14 +38,16 @@ export async function GET(request: NextRequest) {
   try {
 
     // Process query with NLP (with error handling)
-    let processedQuery, relatedTerms, suggestions
+    let processedQuery: ProcessedQuery | undefined
+    let relatedTerms: string[]
+    let suggestions: string[]
     try {
       processedQuery = processQuery(query)
       relatedTerms = getRelatedTerms(query)
       suggestions = generateSuggestions(query)
     } catch (nlpError) {
       console.error('NLP processing error:', nlpError)
-      processedQuery = { keywords: query.split(' '), domains: [], intent: 'search', entities: [], confidence: 0.5 }
+      processedQuery = { originalQuery: query, keywords: query.split(' '), domains: [], intent: 'search', entities: [], confidence: 0.5 }
       relatedTerms = []
       suggestions = []
     }
@@ -78,7 +103,7 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    const whereConditions: any = {
+    const whereConditions: SearchWhereConditions = {
       OR: orConditions
     }
 
@@ -175,7 +200,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-function calculateRelevanceScore(dataset: any, query: string, searchTerms: string[]): number {
+function calculateRelevanceScore(dataset: DatasetWithAgency, query: string, searchTerms: string[]): number {
   let score = 0
 
   // Exact matches in name get highest score
@@ -197,7 +222,7 @@ function calculateRelevanceScore(dataset: any, query: string, searchTerms: strin
   })
 
   // Tag matches
-  dataset.tags.forEach((tag: any) => {
+  dataset.tags.forEach((tag) => {
     if (tag.name.toLowerCase().includes(query.toLowerCase())) {
       score += 20
     }

@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 
+interface DatasetWhereConditions {
+  domains?: { contains: string }
+  agency?: { code: string }
+}
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const domain = searchParams.get('domain')
@@ -9,7 +14,7 @@ export async function GET(request: NextRequest) {
   const offset = parseInt(searchParams.get('offset') || '0')
 
   try {
-    const whereConditions: any = {}
+    const whereConditions: DatasetWhereConditions = {}
 
     if (domain) {
       whereConditions.domains = {

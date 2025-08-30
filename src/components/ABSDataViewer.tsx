@@ -12,7 +12,14 @@ interface ABSDataResponse {
   source: string
   dataflow: string
   dataset: string
-  data?: any
+  data?: {
+    dataSets?: Array<Record<string, unknown>>
+    structure?: {
+      dimensions?: Record<string, unknown>
+      measures?: Record<string, unknown>
+      attributes?: Record<string, unknown>
+    }
+  }
   timestamp: string
   error?: string
 }
@@ -28,7 +35,7 @@ export default function ABSDataViewer({ onClose }: ABSDataViewerProps) {
   const [showQueryBuilder, setShowQueryBuilder] = useState(false)
   const [selectedDataflow, setSelectedDataflow] = useState('ABS_LABOUR_FORCE')
   const [selectedDataset, setSelectedDataset] = useState('M1')
-  const [dimensions, setDimensions] = useState<Record<string, string>>({})
+  const [dimensions, setDimensions] = useState<Record<string, string | number>>({})
   const [startPeriod, setStartPeriod] = useState('')
   const [endPeriod, setEndPeriod] = useState('')
   const [dimensionAtObservation, setDimensionAtObservation] = useState('AllDimensions')
@@ -67,28 +74,6 @@ export default function ABSDataViewer({ onClose }: ABSDataViewerProps) {
     }
   ]
 
-  const handleFetchData = async () => {
-    if (!dataflow || !dataset) return
-
-    setIsLoading(true)
-    try {
-      const response = await fetch(`/api/abs?dataflow=${dataflow}&dataset=${dataset}`)
-      const data = await response.json()
-      setAbsData(data)
-    } catch (error) {
-      console.error('Error fetching ABS data:', error)
-      setAbsData({
-        source: 'ABS Data API',
-        dataflow,
-        dataset,
-        timestamp: new Date().toISOString(),
-        error: 'Failed to fetch data'
-      })
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
   const handleSearchDatasets = async () => {
     if (!searchQuery.trim()) return
 
@@ -122,7 +107,7 @@ export default function ABSDataViewer({ onClose }: ABSDataViewerProps) {
       .join('.')
 
     const filterPart = dimensionParts ? `/${dimensionParts}` : '/all'
-    let url = `${baseUrl}${filterPart}`
+    const url = `${baseUrl}${filterPart}`
 
     // Add query parameters
     const params = new URLSearchParams()
@@ -136,7 +121,6 @@ export default function ABSDataViewer({ onClose }: ABSDataViewerProps) {
   }
 
   const handleSDMXFetch = async () => {
-    const url = generateSDMXUrl()
     setDataflow(selectedDataflow)
     setDataset(selectedDataset)
 
@@ -159,14 +143,14 @@ export default function ABSDataViewer({ onClose }: ABSDataViewerProps) {
     }
   }
 
-  const updateDimension = (dimensionKey: string, value: string) => {
+  const updateDimension = (dimensionKey: string, value: string | number) => {
     setDimensions(prev => ({
       ...prev,
       [dimensionKey]: value
     }))
   }
 
-  const renderDataVisualization = (data: any) => {
+  const renderDataVisualization = (data: ABSDataResponse) => {
     if (!data || data.error) {
       return (
         <div className="text-center py-8">
@@ -285,14 +269,14 @@ export default function ABSDataViewer({ onClose }: ABSDataViewerProps) {
                 <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">1</div>
                 <div>
                   <p className="font-medium text-blue-900">Choose Dataset</p>
-                  <p className="text-blue-700">Select "Business Indicators" from the dropdown below</p>
+                  <p className="text-blue-700">Select &quot;Business Indicators&quot; from the dropdown below</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
                 <div className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold">2</div>
                 <div>
                   <p className="font-medium text-blue-900">Fetch Data</p>
-                  <p className="text-blue-700">Click "Execute SDMX Query" to load the data</p>
+                  <p className="text-blue-700">Click &quot;Execute SDMX Query&quot; to load the data</p>
                 </div>
               </div>
               <div className="flex items-start space-x-3">
@@ -357,7 +341,7 @@ export default function ABSDataViewer({ onClose }: ABSDataViewerProps) {
                       </div>
                       <div className="ml-3">
                         <h4 className="text-sm font-medium text-green-800">Recommended: Business Indicators</h4>
-                        <p className="text-sm text-green-700">Perfect starting point - comprehensive economic data that's guaranteed to work!</p>
+                        <p className="text-sm text-green-700">Perfect starting point - comprehensive economic data that&apos;s guaranteed to work!</p>
                       </div>
                     </div>
                   </div>
@@ -782,8 +766,8 @@ export default function ABSDataViewer({ onClose }: ABSDataViewerProps) {
                   <h3 className="text-lg font-medium text-gray-900 mb-2">Ready to Explore ABS Data</h3>
                   <p className="text-gray-600 max-w-md mx-auto">
                     {!showQueryBuilder
-                      ? "Click on any dataset above and then 'Execute SDMX Query' to start exploring Australian economic data"
-                      : "Configure your SDMX query parameters and click 'Execute SDMX Query' to fetch data"
+                      ? "Click on any dataset above and then &apos;Execute SDMX Query&apos; to start exploring Australian economic data"
+                      : "Configure your SDMX query parameters and click &apos;Execute SDMX Query&apos; to fetch data"
                     }
                   </p>
                   <div className="mt-6 flex justify-center">
@@ -792,7 +776,7 @@ export default function ABSDataViewer({ onClose }: ABSDataViewerProps) {
                         <TrendingUp className="w-5 h-5 text-blue-600 mr-2" />
                         <div className="text-left">
                           <p className="text-sm font-medium text-blue-900">Pro Tip</p>
-                          <p className="text-sm text-blue-700">Start with "Business Indicators" - it's our most reliable dataset!</p>
+                          <p className="text-sm text-blue-700">Start with &quot;Business Indicators&quot; - it&apos;s our most reliable dataset!</p>
                         </div>
                       </div>
                     </div>

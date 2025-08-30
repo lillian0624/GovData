@@ -2,15 +2,27 @@
 
 import { prisma } from './db'
 
+interface DatasetType {
+  id: string
+  name: string
+  description: string
+  keywords: string
+  domains: string
+  tags: Array<{ name: string }>
+  agencyId: string
+  agency: { name: string }
+  accessibility: string
+}
+
 export interface DatasetRecommendation {
-  dataset: any
+  dataset: DatasetType
   score: number
   reason: string
-  type: 'related' | 'domain' | 'keyword' | 'agency'
+  type: 'related' | 'domain' | 'keyword' | 'agency' | 'trending'
 }
 
 export interface RecommendationContext {
-  currentDataset?: any
+  currentDataset?: DatasetType
   searchQuery?: string
   domains?: string[]
   keywords?: string[]
@@ -18,7 +30,7 @@ export interface RecommendationContext {
 }
 
 // Calculate similarity between two datasets
-function calculateSimilarity(dataset1: any, dataset2: any): number {
+function calculateSimilarity(dataset1: DatasetType, dataset2: DatasetType): number {
   let similarity = 0
 
   // Domain overlap
@@ -36,8 +48,8 @@ function calculateSimilarity(dataset1: any, dataset2: any): number {
   similarity += keywordOverlap * 0.2
 
   // Tag overlap
-  const tags1 = dataset1.tags.map((t: any) => t.name)
-  const tags2 = dataset2.tags.map((t: any) => t.name)
+  const tags1 = dataset1.tags.map((t) => t.name)
+  const tags2 = dataset2.tags.map((t) => t.name)
   const tagOverlap = tags1.filter((t: string) => tags2.includes(t)).length
   similarity += tagOverlap * 0.25
 
@@ -222,7 +234,7 @@ export async function getSearchRecommendations(
           domains: JSON.parse(dataset.domains || '[]')
         },
         score: 0.7,
-        reason: `Popular in ${context.domains[0]} domain`,
+        reason: `Popular in ${context.domains && context.domains.length > 0 ? context.domains[0] : 'general'} domain`,
         type: 'domain'
       })
     })
@@ -305,7 +317,7 @@ export async function getSearchRecommendations(
 }
 
 // Get trending/popular datasets
-export async function getTrendingDatasets(limit: number = 5): Promise<any[]> {
+export async function getTrendingDatasets(limit: number = 5): Promise<DatasetRecommendation[]> {
   // Get datasets with most relationships (indicating importance)
   const trending = await prisma.dataset.findMany({
     include: {
@@ -326,14 +338,18 @@ export async function getTrendingDatasets(limit: number = 5): Promise<any[]> {
   })
 
   return trending.map(dataset => ({
-    ...dataset,
-    keywords: (() => {
-      try { return JSON.parse(dataset.keywords || '[]') } catch { return [] }
-    })(),
-    domains: (() => {
-      try { return JSON.parse(dataset.domains || '[]') } catch { return [] }
-    })(),
-    trendScore: (dataset._count.relatedFrom + dataset._count.relatedTo) * 10
+    dataset: {
+      ...dataset,
+      keywords: (() => {
+        try { return JSON.parse(dataset.keywords || '[]') } catch { return [] }
+      })(),
+      domains: (() => {
+        try { return JSON.parse(dataset.domains || '[]') } catch { return [] }
+      })()
+    },
+    score: (dataset._count.relatedFrom + dataset._count.relatedTo) * 10,
+    reason: 'Trending dataset based on relationships',
+    type: 'trending' as const
   }))
 }
 

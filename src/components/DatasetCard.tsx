@@ -1,3 +1,4 @@
+import React from 'react'
 import { ExternalLink, Download, Zap, Link } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -18,15 +19,15 @@ interface Dataset {
   dataPortalUrl?: string
   apiEndpoint?: string
   tags: Array<{ name: string }>
-  relatedFrom: any[]
-  relatedTo: any[]
+  relatedFrom: Array<{ id: string }>
+  relatedTo: Array<{ id: string }>
   relevanceScore?: number
 }
 
 interface DatasetCardProps {
   dataset: Dataset
   onSelect: (dataset: Dataset) => void
-  getDomainIcon: (domain: string) => JSX.Element
+  getDomainIcon: (domain: string) => React.JSX.Element
   getAgencyColor: (code: string) => string
 }
 

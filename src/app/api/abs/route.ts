@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import axios from 'axios'
 
-const ABS_BASE_URL = 'https://api.data.abs.gov.au'
 const ABS_API_KEY = process.env.ABS_API_KEY // You'll need to get this from ABS
 
 export async function GET(request: NextRequest) {
@@ -50,10 +49,10 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString()
     })
 
-  } catch (error: any) {
-    console.error('ABS API error:', error.message)
+  } catch (error) {
+    console.error('ABS API error:', error instanceof Error ? error.message : 'Unknown error')
 
-    if (error.response) {
+    if (axios.isAxiosError(error) && error.response) {
       return NextResponse.json({
         error: 'ABS API request failed',
         status: error.response.status,
@@ -63,7 +62,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       error: 'Failed to fetch data from ABS API',
-      message: error.message
+      message: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 })
   }
 }

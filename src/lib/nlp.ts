@@ -98,7 +98,6 @@ function extractKeywords(query: string): string[] {
 }
 
 function detectDomains(query: string, keywords: string[]): string[] {
-  const detectedDomains: string[] = []
   const domainScores: Record<string, number> = {}
 
   // Check each domain's keywords against the query

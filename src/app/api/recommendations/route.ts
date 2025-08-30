@@ -37,12 +37,7 @@ export async function GET(request: NextRequest) {
 
       case 'trending':
         const trending = await getTrendingDatasets(limit)
-        recommendations = trending.map(dataset => ({
-          dataset,
-          score: dataset.trendScore || 0.5,
-          reason: 'Trending dataset',
-          type: 'trending'
-        }))
+        recommendations = trending
         break
 
       case 'complementary':
