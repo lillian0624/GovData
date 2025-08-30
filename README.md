@@ -1,0 +1,313 @@
+# GovData - Government Data Discovery Platform
+
+A modern, searchable interface that connects fragmented government datasets across different agencies, allowing users to ask natural questions and discover unexpected links between data sources.
+
+![GovData](https://img.shields.io/badge/GovData-Active-brightgreen)
+![Next.js](https://img.shields.io/badge/Next.js-15.5.2-black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
+![Prisma](https://img.shields.io/badge/Prisma-6.15.0-green)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC)
+
+## 🌟 Features
+
+### ✅ Core Functionality
+- **Natural Language Search**: Ask questions in plain English like "aged care workforce trends by region since 2015"
+- **Multi-Agency Integration**: Connects ABS, AIHW, and Department of Education datasets
+- **Smart Recommendations**: Discover datasets you didn't know existed
+- **Live Data Access**: Fetch real-time statistics from ABS API
+- **Modern UI**: Clean, responsive interface built with Next.js and Tailwind CSS
+
+### 🎯 Key UX Principles
+- **Researcher & Policy Maker Focused**: Designed for users who need to find and connect government data
+- **Natural Language Interface**: No need to know technical dataset names or codes
+- **Discovery-Driven**: Shows relationships between datasets across agencies
+- **API-First**: Ready to integrate new government data sources
+
+### 🚀 Live ABS Data Integration
+- **Real-time ABS API**: Direct connection to Australian Bureau of Statistics data
+- **Business Indicators**: Quarterly economic data including sales, profits, employment
+- **Historical Data**: Time series from 1984 to present with future projections
+- **Industry Breakdown**: Manufacturing, retail, services, and more
+- **Regional Analysis**: State and territory-level statistics
+
+## 🏗️ Architecture
+
+### Backend
+- **Next.js API Routes**: RESTful endpoints for search, datasets, and recommendations
+- **Prisma + SQLite**: Database schema for dataset metadata and relationships
+- **NLP Processing**: Custom natural language processing for query understanding
+- **Recommendation Engine**: ML-inspired algorithm for suggesting related datasets
+
+### Frontend
+- **React + TypeScript**: Type-safe, modern React components
+- **Framer Motion**: Smooth animations and transitions
+- **Tailwind CSS**: Utility-first CSS framework
+- **Lucide Icons**: Beautiful, consistent iconography
+
+### Database Schema
+```sql
+- Agency (ABS, AIHW, Department of Education)
+- Dataset (metadata, keywords, domains)
+- Tag (categorization system)
+- DatasetRelation (relationships between datasets)
+- SearchQuery (analytics and optimization)
+```
+
+## 📋 Installation
+
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+
+### Quick Start
+
+1. **Clone and install dependencies**:
+```bash
+cd /Users/yangli/gov-data-discovery
+npm install
+```
+
+2. **Set up the database**:
+```bash
+# Generate Prisma client
+npx prisma generate
+
+# Push database schema
+npx prisma db push
+
+# Seed with sample data
+npx prisma db seed
+```
+
+3. **Configure environment (optional)**:
+```bash
+# Add to .env file for ABS API access
+ABS_API_KEY=your_abs_api_key_here
+```
+
+4. **Start the development server**:
+```bash
+npm run dev
+```
+
+5. **Open your browser**:
+   - Local: http://localhost:3000
+   - Or port 3001 if 3000 is in use
+
+## 🔍 Usage
+
+### Natural Language Search
+Type questions like:
+- "aged care workforce trends by region since 2015"
+- "housing affordability and labour market data"
+- "education outcomes by socioeconomic status"
+
+### Live ABS Data
+1. Click "Live ABS Data" button in the header
+2. Use pre-configured datasets or enter custom parameters:
+   - **Dataflow**: `ABS` (or `ABS_LABOUR_FORCE`, etc.)
+   - **Dataset**: `QBIS` (or `M1`, etc.)
+3. View real-time visualizations and raw data
+
+### Dataset Discovery
+- Browse datasets by agency, domain, or tags
+- View detailed dataset information and relationships
+- Download data or visit source portals
+- See smart recommendations based on your interests
+
+## 🔌 API Endpoints
+
+### Search API
+```http
+GET /api/search?q=aged+care+workforce&domain=health&agency=AIHW
+```
+
+**Response:**
+```json
+{
+  "query": "aged care workforce",
+  "results": [...],
+  "total": 25,
+  "nlp": {
+    "processedQuery": {...},
+    "relatedTerms": [...],
+    "suggestions": [...]
+  }
+}
+```
+
+### Dataset API
+```http
+GET /api/datasets/[id]
+```
+
+**Response:**
+```json
+{
+  "id": "dataset-id",
+  "name": "Aged Care Workforce Data",
+  "description": "Comprehensive data on aged care workforce...",
+  "agency": {...},
+  "domains": ["health", "labour", "ageing"],
+  "keywords": ["aged care", "workforce", "nursing", "carers"],
+  "accessibility": "public",
+  "format": "CSV"
+}
+```
+
+### Recommendations API
+```http
+GET /api/recommendations?type=search&domains=health,labour&keywords=aged+care
+```
+
+### Live ABS Data API
+```http
+GET /api/abs?dataflow=ABS&dataset=QBIS
+```
+
+## 🎨 Components
+
+### Core Components
+- **DataDiscoveryApp**: Main application container
+- **DatasetCard**: Individual dataset display with metadata
+- **SearchFilters**: Advanced filtering by domain and agency
+- **ABSDataViewer**: Live ABS data visualization modal
+
+### Utility Components
+- **DatasetDetailModal**: Detailed dataset information popup
+- **SearchResults**: Formatted search result display
+- **RecommendationsPanel**: Smart dataset suggestions
+
+## 📊 Sample Datasets
+
+### ABS (Australian Bureau of Statistics)
+- **Labour Force Statistics**: Employment, unemployment, participation rates
+- **Population Estimates**: Quarterly demographic data
+- **Business Indicators**: Sales, profits, inventories by industry
+- **Census Data**: 2021 Census results and historical trends
+
+### AIHW (Australian Institute of Health and Welfare)
+- **Aged Care Workforce**: Staffing levels and qualifications
+- **Housing and Homelessness**: Support services and affordability
+- **Population Projections**: Age structure forecasts to 2071
+- **Health Expenditure**: Government and private health spending
+
+### Department of Education, Skills and Employment
+- **Skills Shortages**: Occupational demand analysis
+- **Apprenticeships**: Training completions and outcomes
+- **Higher Education**: University enrollment and graduate employment
+- **Vocational Education**: TAFE and private provider statistics
+
+## 🔧 Development
+
+### Available Scripts
+```bash
+npm run dev      # Start development server with Turbopack
+npm run build    # Build for production
+npm run start    # Start production server
+npm run lint     # Run ESLint
+```
+
+### Database Management
+```bash
+npx prisma studio    # Open Prisma Studio (http://localhost:5555)
+npx prisma db push   # Apply schema changes
+npx prisma db seed   # Populate with sample data
+npx prisma generate  # Generate Prisma client
+```
+
+### Environment Variables
+```env
+DATABASE_URL="file:./dev.db"
+ABS_API_KEY=your_abs_api_key_here  # Optional for enhanced ABS access
+```
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+```bash
+npm install -g vercel
+vercel --prod
+```
+
+### Docker
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+EXPOSE 3000
+CMD ["npm", "start"]
+```
+
+### Environment Setup
+1. Set `DATABASE_URL` to your production database
+2. Configure `ABS_API_KEY` for live ABS data access
+3. Set `NODE_ENV=production`
+
+## 🤝 Contributing
+
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
+3. **Commit changes**: `git commit -m 'Add amazing feature'`
+4. **Push to branch**: `git push origin feature/amazing-feature`
+5. **Open a Pull Request**
+
+### Development Guidelines
+- Use TypeScript for all new code
+- Follow existing code style and patterns
+- Add tests for new features
+- Update documentation as needed
+- Ensure accessibility compliance
+
+## 📈 Analytics & Monitoring
+
+### Search Analytics
+- Query frequency tracking
+- Popular search terms
+- User engagement metrics
+- Dataset usage statistics
+
+### Performance Monitoring
+- API response times
+- Database query performance
+- User session analytics
+- Error tracking and reporting
+
+## 🔒 Security & Privacy
+
+### Data Handling
+- No user data collection without consent
+- Secure API key management
+- HTTPS-only in production
+- Input validation and sanitization
+
+### Government Data Compliance
+- Respect ABS data usage policies
+- Comply with AIHW data sharing agreements
+- Follow Department of Education privacy requirements
+- Regular security audits
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **ABS**: For providing comprehensive statistical data and API access
+- **AIHW**: For health and welfare data insights
+- **Department of Education**: For skills and employment data
+- **Australian Government**: For open data initiatives
+
+---
+
+Built with ❤️ for Australian researchers, policy makers, and data enthusiasts.
+
+**Live Demo**: [http://localhost:3001](http://localhost:3001)
+
+**ABS Live Data**: Real-time Australian Bureau of Statistics integration
+**Natural Language Search**: Ask questions in plain English
+**Smart Recommendations**: Discover related datasets automatically
+**Multi-Agency Integration**: Connect across government departments

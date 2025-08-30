@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Agency {
+  id          String   @id @default(cuid())
+  code        String   @unique // ABS, AIHW, DoE, etc.
+  name        String
+  description String?
+  website     String?
+  datasets    Dataset[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Dataset {
+  id            String   @id @default(cuid())
+  name          String
+  description   String
+  agencyId      String
+  agency        Agency   @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+
+  // Metadata fields
+  collectionDate DateTime?
+  frequency      String? // annual, monthly, quarterly, one-off
+  accessibility  String  // public, api, request-only
+  format         String  // CSV, API, PDF, data-cube
+
+  // Access information
+  apiEndpoint    String?
+  downloadUrl    String?
+  dataPortalUrl  String?
+
+  // Search and categorization
+  keywords       String // JSON array of searchable keywords
+  domains        String // JSON array of domains: education, housing, health, labour, ageing, inequality
+  tags           Tag[]
+
+  // Relationships
+  relatedFrom    DatasetRelation[] @relation("from")
+  relatedTo      DatasetRelation[] @relation("to")
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([name, agencyId])
+}
+
+model Tag {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  datasets  Dataset[]
+  createdAt DateTime @default(now())
+}
+
+model DatasetRelation {
+  id          String @id @default(cuid())
+  fromId      String
+  toId        String
+  relationType String // feeds-into, related-to, depends-on, etc.
+  description String?
+
+  from        Dataset @relation("from", fields: [fromId], references: [id], onDelete: Cascade)
+  to          Dataset @relation("to", fields: [toId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+
+  @@unique([fromId, toId, relationType])
+}
+
+model SearchQuery {
+  id          String   @id @default(cuid())
+  query       String
+  userId      String? // For future user tracking
+  results     Int      @default(0)
+  timestamp   DateTime @default(now())
+
+  @@index([query])
+  @@index([timestamp])
+}
