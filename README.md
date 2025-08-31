@@ -373,3 +373,11 @@ Built with ❤️ for Australian researchers, policy makers, and data enthusiast
 **Natural Language Search**: Ask questions in plain English
 **Smart Recommendations**: Discover related datasets automatically
 **Multi-Agency Integration**: Connect across government departments
+
+## Data Directory Team
+- Riya Ahuja
+- Clarissa Womack
+- Li Yang
+- Xinmiao Yang
+
+<img src="Team.jpg" alt="Data Directory Team" height="400">
