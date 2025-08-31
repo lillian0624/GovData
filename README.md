@@ -367,7 +367,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Built with ❤️ for Australian researchers, policy makers, and data enthusiasts.
 
-**Live Demo**: [http://localhost:3001](http://localhost:3001)
+
 
 **ABS Live Data**: Real-time Australian Bureau of Statistics integration
 **Natural Language Search**: Ask questions in plain English
