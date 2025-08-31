@@ -380,4 +380,3 @@ Built with ❤️ for Australian researchers, policy makers, and data enthusiast
 - Li Yang
 - Xinmiao Yang
 
-<img src="Team.jpg" alt="Data Directory Team" height="400">
